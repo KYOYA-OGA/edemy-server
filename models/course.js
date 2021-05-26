@@ -18,11 +18,10 @@ const lessonSchema = new mongoose.Schema(
       type: {},
       minLength: 200,
     },
-    video_link: {
-      free_preview: {
-        type: Boolean,
-        default: false,
-      },
+    video: {},
+    free_preview: {
+      type: Boolean,
+      default: false,
     },
   },
   { timestamps: true }
