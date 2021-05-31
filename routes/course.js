@@ -4,7 +4,7 @@ const formidableMiddleware = require('express-formidable')
 const router = express.Router()
 
 // middleware
-import { requireSignin, isInstructor } from '../middlewares'
+import { requireSignin, isInstructor, isEnrolled } from '../middlewares'
 
 // controllers
 import {
@@ -21,6 +21,14 @@ import {
   publishCourse,
   unpublishCourse,
   courses,
+  checkEnrollment,
+  freeEnrollment,
+  paidEnrollment,
+  stripeSuccess,
+  userCourses,
+  markCompleted,
+  listCompleted,
+  markInComplete,
 } from '../controllers/course'
 
 router.get('/courses', courses)
@@ -36,7 +44,7 @@ router.get('/course/:slug', read)
 router.post(
   '/course/video-upload/:instructorId',
   requireSignin,
-  formidableMiddleware(),
+  formidableMiddleware({ maxFileSize: 500 * 1024 * 1024 }),
   uploadVideo
 )
 router.post('/course/video-remove/:instructorId', requireSignin, removeVideo)
@@ -48,5 +56,18 @@ router.put('/course/unpublish/:courseId', requireSignin, unpublishCourse)
 router.post('/course/lesson/:slug/:instructorId', requireSignin, addLesson)
 router.put('/course/lesson/:slug/:instructorId', requireSignin, updateLesson)
 router.put('/course/:slug/:lessonId', requireSignin, removeLesson)
+
+router.get('/check-enrollment/:courseId', requireSignin, checkEnrollment)
+router.post('/free-enrollment/:courseId', requireSignin, freeEnrollment)
+router.post('/paid-enrollment/:courseId', requireSignin, paidEnrollment)
+router.get('/stripe-success/:courseId', requireSignin, stripeSuccess)
+
+router.get('/user-courses', requireSignin, userCourses)
+router.get('/user/course/:slug', requireSignin, isEnrolled, read)
+
+// mark completed
+router.post('/mark-completed', requireSignin, markCompleted)
+router.post('/list-completed', requireSignin, listCompleted)
+router.post('/mark-incomplete', requireSignin, markInComplete)
 
 module.exports = router
