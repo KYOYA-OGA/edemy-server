@@ -341,12 +341,12 @@ export const freeEnrollment = async (req, res) => {
     ).exec()
 
     res.json({
-      message: 'Congrats! You have successfully enrolled',
+      message: 'おめでとうございます！登録に成功しました！',
       course,
     })
   } catch (err) {
     console.log(err)
-    return res.status(400).send('Enrollment create failed')
+    return res.status(400).send('登録に失敗しました')
   }
 }
 

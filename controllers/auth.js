@@ -137,7 +137,7 @@ export const sendTestEmail = async (req, res) => {
 export const forgotPassword = async (req, res) => {
   try {
     const { email } = req.body
-    // console.log(email)
+
     const shortCode = nanoid(6).toUpperCase()
     // save shortCode in the database
     const user = await User.findOneAndUpdate(
@@ -159,17 +159,17 @@ export const forgotPassword = async (req, res) => {
             Charset: 'UTF-8',
             Data: `
             <html>
-              <h1>Reset password</h1>
-              <p>Use this code to reset your password</p>
+              <h1>パスワードをリセットします</h1>
+              <p>こちらのコードを入力してください</p>
               <h2 style="color:red;">${shortCode}</h2>
-              <i>Udemy.clone.com</i>
+              <i>edemy.com</i>
             </html>
           `,
           },
         },
         Subject: {
           Charset: 'UTF-8',
-          Data: 'Reset Password',
+          Data: 'パスワードをリセットする',
         },
       },
     }
@@ -178,7 +178,6 @@ export const forgotPassword = async (req, res) => {
 
     emailSent
       .then((data) => {
-        console.log(data)
         res.json({ ok: true })
       })
       .catch((err) => {
@@ -192,7 +191,6 @@ export const forgotPassword = async (req, res) => {
 export const resetPassword = async (req, res) => {
   try {
     const { email, code, newPassword } = req.body
-    // console.log(email, code, newPassword)
     const hashedPassword = await hashPassword(newPassword)
 
     const user = User.findOneAndUpdate(
